@@ -63,7 +63,7 @@ class LocalVol(gym.Env):
             
             xi = (Snext[0]**2+Snext[1]**2)/(Snext[0]+Snext[1])-(S[0]**2+S[1]**2)/(S[0]+S[1])
 
-            self.Pi.append(sum([(action[0][n]*max(Snext[0]-k0[n],0)+action[1][n]*max(k0[n]-Snext[0],0)) for n in range(N)])-xi) # actual result from the strategy
+            self.Pi.append(action)
 
         if self.time == M-1:
             self.terminated = True
