@@ -26,18 +26,16 @@ import matplotlib.pyplot as plt
 ##########################################
 
 N = 10
-Nsim = 100
 Dynamics  = 'BS'
 star_time = 0
-T = 0.5
-dT = 1/52
+T = 1
+dT = 1/252
 r = 0
-mu = [0.03,0.01]
-sigma = [0.3,0.1]
+mu = [0.05]
+sigma = [0.3]
+P = [[1]]
 
-LVol = LocalVol(N = N, Nsim = Nsim,
-                             Dynamics = Dynamics, start_time = star_time,
-                               T = T, dT = dT, r = r, mu = mu, sigma = sigma)
+LVol = LocalVol(Dynamics = Dynamics, T = T, dT = dT, mu = mu, sigma = sigma, P = P)
 LVol.seed(seed=random.seed(10))
 
 env = gym.wrappers.TimeLimit(LVol, max_episode_steps=T)
@@ -45,7 +43,7 @@ env = Monitor(env, allow_early_resets=True)
 
 steps = 10000
 
-path_folder = f"C:/Users/yoshi/OneDrive/Desktop/Research/Benchmark_RL/BS_PPO" # PATH to the BS_PPO_Models folder
+path_folder = f"C:/Users/yoshi/OneDrive/Desktop/Research/Optimal-Trading-Frequency/BS_PPO" # PATH to the BS_PPO_Models folder
 path = f"{path_folder}/BS_PPO_{str(steps)}_{str(int(sigma[0]*100))}{str(int(sigma[1]*100))}"
 
 eval_callback = EvalCallback(env, best_model_save_path=path_folder,
