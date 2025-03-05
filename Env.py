@@ -94,19 +94,31 @@ class LocalVol(gym.Env):
         
         if self.Dynamics == 'BS':
             self.MP[0] = [0,0] # initial drift and volatility are mu[0] and sigma[0]
-            for i in range(M):
-                self.MP[i][0] = self.np_random.random(range(self.N))
-                self.MP[i][1] = self.np_random.random(range(self.N))
-            eps = [dT*(mu[self.MP[i][0]]+self.np_random.normal(0,sigma[self.MP[i][1]]**2)) for i in range(M)]
+            for i in range(1,M):
+                q = self.P[self.MP[i-1][0]*self.MP[i-1][1] + self.MP[i-1][1]] # transition probabilities
+                U = self.np_random.uniform() # random number
+                if U < q[0]: # transition to the first state
+                    self.MP[i][0] = 0
+                    self.MP[i][1] = 0
+                elif U < q[0]+q[1]: # transition to the second state
+                    self.MP[i][0] = 0
+                    self.MP[i][1] = 1
+                elif U < q[0]+q[1]+q[2]: # transition to the third state
+                    self.MP[i][0] = 1
+                    self.MP[i][1] = 0
+                else: # transition to the fourth state
+                    self.MP[i][0] = 1
+                    self.MP[i][1] = 1
+            eps = [dT*(mu[self.MP[i][0]]+self.np_random.normal(0,sigma[self.MP[i][1]]**2)) for i in range(M)] # log returns increments
         else:
             print('Dynamics not implemented')
             return
-        self.ts = [self.S0*np.exp(sum(eps[:i])) for i in range(M)]
+        self.ts = [self.S0*np.exp(sum(eps[:i])) for i in range(M)] # stock prices
 
-        obs = self.MP[0]
+        obs = self.MP[0] # initial observation
 
-        self.terminated = False
-        self.truncated = False
+        self.terminated = False # the episode is not terminated
+        self.truncated = False # the episode is not truncated
 
         return obs, {}
 
