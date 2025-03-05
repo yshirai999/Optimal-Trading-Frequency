@@ -44,6 +44,8 @@ class LocalVol(gym.Env):
         self,
         action
     ):
+        T = self.T
+        dt = self.dT
         M = self.M
         S = self.ts[self.time]   
         obs = self.MP[self.time][0]*self.MP[self.time][1] + self.MP[self.time][1]
@@ -54,11 +56,11 @@ class LocalVol(gym.Env):
                 self.tradingtimes[i] = i-self.time // action
             if self.time in self.tradingtimes:
                 if self.mu[self.MP[self.time][0]] > 0: # buy if drift is positive
-                    self.cash -= 1 # cash position decreases by 1 investment unit (e.g. by 1 dollar)
-                    self.pos += 1/S # position in the stock grows by 1 investment unit (e.g. by 1 dollar)
+                    self.cash -= action*dt/T # cash position decreases by 1 investment unit (e.g. by 1 dollar)
+                    self.pos += action*dt/T/S # position in the stock grows by 1 investment unit (e.g. by 1 dollar)
                 else: # sell if drift is negative
-                    self.cash += 1
-                    self.pos -= 1/S
+                    self.cash += action*dt/T
+                    self.pos -= action*dt/T/S
 
             self.time += 1
             dS = self.ts[self.time+1] - S # stock price variation
