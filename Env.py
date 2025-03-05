@@ -52,8 +52,7 @@ class LocalVol(gym.Env):
 
         if self.time < M-1:
             self.tradingtimes[self.time:] = np.zeros(M-self.time)
-            for i in range(self.time+1,M):
-                self.tradingtimes[i] = i-self.time // action
+            self.tradingtimes[self.time:] = [1 if (i % action) == 0 else 0 for i in range(M-1-self.time)] # trading times (in time steps)
             if self.time in self.tradingtimes:
                 if self.mu[self.MP[self.time][0]] > 0: # buy if drift is positive
                     self.cash -= action*dt/T # cash position decreases by 1 investment unit (e.g. by 1 dollar)
@@ -97,18 +96,11 @@ class LocalVol(gym.Env):
             for i in range(1,M):
                 q = self.P[self.MP[i-1][0]*self.MP[i-1][1] + self.MP[i-1][1]] # transition probabilities
                 U = self.np_random.uniform() # random number
-                if U < q[0]: # transition to the first state
-                    self.MP[i][0] = 0
-                    self.MP[i][1] = 0
-                elif U < q[0]+q[1]: # transition to the second state
-                    self.MP[i][0] = 0
-                    self.MP[i][1] = 1
-                elif U < q[0]+q[1]+q[2]: # transition to the third state
-                    self.MP[i][0] = 1
-                    self.MP[i][1] = 0
-                else: # transition to the fourth state
-                    self.MP[i][0] = 1
-                    self.MP[i][1] = 1
+                for i in range(N**2):
+                    if U < sum(q[:i]): # transition to the i-th state
+                        self.MP[i][0] = i // N
+                        self.MP[i][1] = i % N
+                        
             eps = [dT*(mu[self.MP[i][0]]+self.np_random.normal(0,sigma[self.MP[i][1]]**2)) for i in range(M)] # log returns increments
         else:
             print('Dynamics not implemented')
