@@ -57,10 +57,10 @@ class LocalVol(gym.Env):
             if self.time in self.tradingtimes:
                 if self.mu[self.MP[self.time][0]] > 0: # buy if drift is positive
                     self.cash -= action*dt/T # cash position decreases by 1 investment unit (e.g. by 1 dollar)
-                    self.pos += action*dt/T/S # position in the stock grows by 1 investment unit (e.g. by 1 dollar)
+                    self.pos += (action*dt/T)/S # position in the stock grows by 1 investment unit (e.g. by 1 dollar)
                 else: # sell if drift is negative
                     self.cash += action*dt/T
-                    self.pos -= action*dt/T/S
+                    self.pos -= (action*dt/T)/S
 
             self.time += 1
             dS = self.ts[self.time+1] - S # stock price variation
