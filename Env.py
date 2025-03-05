@@ -51,7 +51,6 @@ class LocalVol(gym.Env):
         obs = self.MP[self.time][0]*self.MP[self.time][1] + self.MP[self.time][1]
 
         if self.time < M-1:
-            self.tradingtimes[self.time:] = np.zeros(M-self.time)
             self.tradingtimes[self.time:] = [1 if (i % action) == 0 else 0 for i in range(M-1-self.time)] # trading times (in time steps)
             if self.time in self.tradingtimes:
                 if self.mu[self.MP[self.time][0]] > 0: # buy if drift is positive
