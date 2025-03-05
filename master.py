@@ -7,7 +7,7 @@
 ### Libraries
 ##########################################
 
-from Env import LocalVol
+from env import LocalVol
 import gymnasium as gym
 from stable_baselines3 import PPO
 from stable_baselines3.common.evaluation import evaluate_policy
@@ -15,7 +15,7 @@ from stable_baselines3.common.vec_env import DummyVecEnv
 from stable_baselines3.common.env_checker import check_env
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.callbacks import EvalCallback
-from Loggers import TensorboardCallback
+from loggers import TensorboardCallback
 import numpy as np
 import random
 import os
