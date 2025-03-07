@@ -38,8 +38,8 @@ P = [[1]]
 LVol = LocalVol(Dynamics = Dynamics, T = T, dT = dT, mu = mu, sigma = sigma, P = P)
 LVol.seed(seed=random.seed(10))
 
-#env = gym.wrappers.TimeLimit(LVol, max_episode_steps=T)
-env = Monitor(LVol, allow_early_resets=True)
+env = gym.wrappers.TimeLimit(LVol, max_episode_steps=T)
+env = Monitor(env, allow_early_resets=True)
 
 steps = 10000
 

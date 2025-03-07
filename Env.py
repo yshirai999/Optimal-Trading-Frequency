@@ -114,7 +114,6 @@ class LocalVol(gym.Env):
         self.terminated = False # the episode is not terminated
         self.truncated = False # the episode is not truncated
         self.done = False
-        print(obs,self.observation_space.sample())
 
         self.info = {'terminal_observation': [0, 0, self.terminated, self.truncated]}
 
