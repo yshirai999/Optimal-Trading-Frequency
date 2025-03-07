@@ -38,13 +38,15 @@ P = [[1]]
 LVol = LocalVol(Dynamics = Dynamics, T = T, dT = dT, mu = mu, sigma = sigma, P = P)
 LVol.seed(seed=random.seed(10))
 
-env = gym.wrappers.TimeLimit(LVol, max_episode_steps=T)
-env = Monitor(env, allow_early_resets=True)
+#env = gym.wrappers.TimeLimit(LVol, max_episode_steps=T)
+env = Monitor(LVol, allow_early_resets=True)
 
 steps = 10000
 
 path_folder = f"C:/Users/yoshi/OneDrive/Desktop/Research/Optimal-Trading-Frequency/BS_PPO" # PATH to the BS_PPO_Models folder
-path = f"{path_folder}/BS_PPO_{str(steps)}_{str(int(sigma[0]*100))}{str(int(sigma[1]*100))}"
+path = f"{path_folder}/BS_PPO_{str(steps)}_n_regimes_{str(len(mu))}"
+for k in range(len(mu)):
+    path += f"mu[{str(k)}]_mu{str(int(mu[k]*100))}"
 
 eval_callback = EvalCallback(env, best_model_save_path=path_folder,
                              log_path=path_folder, eval_freq=500,
@@ -60,7 +62,7 @@ except:
                 tensorboard_log=f"{path_folder}/tensorboard/")
     model.learn(total_timesteps=steps, callback=eval_callback, log_interval = 100)
     model.save(f"{path}.zip")
-    # To open tensorboard window, run tensorboard --logdir C:/Users/yoshi/OneDrive/Desktop/Research/Benchmark_RL/BS_PPO/tensorboard/PPO_1
+    # To open tensorboard window, run tensorboard --logdir C:/Users/yoshi/OneDrive/Desktop/Research/Optimal-Trading-Frequency/BS_PPO/tensorboard/PPO_1
 
 ##########################################
 ### Experiment
