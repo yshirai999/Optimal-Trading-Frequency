@@ -3,6 +3,7 @@
 ### PYTHONPATH is the path to python.exe
 ### in the OTF conda environment
 ### PATH is this python file's path
+### Example: & C:/Users/yoshi/Anaconda3/envs/OTF/python.exe C:/Users/yoshi/OneDrive/Desktop/Research/Optimal-Trading-Frequency/master.py
 ##########################################
 ### Libraries
 ##########################################
