@@ -3,7 +3,7 @@
 ### PYTHONPATH is the path to python.exe
 ### in the OTF conda environment
 ### PATH is this python file's path
-### Example: & C:/Users/yoshi/Anaconda3/envs/OTF/python.exe C:/Users/yoshi/OneDrive/Desktop/Research/Optimal-Trading-Frequency/master.py
+### Example: C:/Users/yoshi/anaconda3/envs/OTF/python.exe "c:/Users/yoshi/OneDrive/Desktop/Research/Optimal Trading Frequency/Optimal-Trading-Frequency/master.py"
 ##########################################
 ### Libraries
 ##########################################
@@ -42,9 +42,9 @@ LVol.seed(seed=random.seed(10))
 env = gym.wrappers.TimeLimit(LVol, max_episode_steps=T)
 env = Monitor(env, allow_early_resets=True)
 
-steps = 10000
+steps = 100000
 
-path_folder = f"C:/Users/yoshi/OneDrive/Desktop/Research/Optimal-Trading-Frequency/BS_PPO" # PATH to the BS_PPO_Models folder
+path_folder = f"C:/Users/yoshi/OneDrive/Desktop/Research/Optimal Trading Frequency/Optimal-Trading-Frequency/BS_PPO" # PATH to the BS_PPO_Models folder
 path = f"{path_folder}/BS_PPO_{str(steps)}_n_regimes_{str(len(mu))}"
 for k in range(len(mu)):
     path += f"mu[{str(k)}]_mu{str(int(mu[k]*100))}"
@@ -63,7 +63,7 @@ except:
                 tensorboard_log=f"{path_folder}/tensorboard/")
     model.learn(total_timesteps=steps, callback=eval_callback, log_interval = 100)
     model.save(f"{path}.zip")
-    # To open tensorboard window, run tensorboard --logdir C:/Users/yoshi/OneDrive/Desktop/Research/Optimal-Trading-Frequency/BS_PPO/tensorboard/PPO_1
+    # To open tensorboard window, run tensorboard --logdir C:/Users/yoshi/OneDrive/Desktop/Research/Optimal Trading Frequency/Optimal-Trading-Frequency/BS_PPO/tensorboard/PPO_1
 
 ##########################################
 ### Experiment
@@ -76,15 +76,17 @@ tradingtimes = []
 
 for i in range(Nepisodes):
     obs = env.reset()
-    # obs = [[obs[0][i] for i in range(len(obs[0]))]]
+    obs = obs[0]
+    
+    #obs = [[obs[0][i] for i in range(len(obs[0]))]]
     cont = True
     i = 0
     act.append([])
     tradingtimes.append([])
     reward_episode = 0
     while cont:
-        action = 1#env.action_space.sample()
-        obs, reward, terminated, truncated, info = LVol.step(action)
+        action = model.predict([obs], deterministic = True)
+        obs, reward, terminated, truncated, info = LVol.step(action[0][0])
         act[-1].append(action)
         reward_episode += reward
         i += 1
@@ -94,3 +96,10 @@ for i in range(Nepisodes):
             rew.append(reward_episode)
 
 print(np.mean(rew),np.std(rew))
+
+# obs = Benv.reset()
+#     obs = [[obs[0][i] for i in range(len(obs[0]))]]
+#     cont = True
+#     i = 0
+#     while cont:
+#         action, _states = model.predict(obs, deterministic = True)
