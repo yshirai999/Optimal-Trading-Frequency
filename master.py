@@ -69,40 +69,28 @@ except:
 ### Experiment
 ##########################################
 
-Nepisodes = 25
+Nepisodes = 100
 rew = []
-Pi = []
+act = []
+tradingtimes = []
 
-vec_env = model.get_env()
 for i in range(Nepisodes):
-    obs = LVol.reset()
-    obs = [[obs[0][i] for i in range(len(obs[0]))]]
+    obs = env.reset()
+    # obs = [[obs[0][i] for i in range(len(obs[0]))]]
     cont = True
     i = 0
+    act.append([])
+    tradingtimes.append([])
+    reward_episode = 0
     while cont:
-        action, _states = model.predict(obs, deterministic = True)
-        if len(action) == 1: 
-            obs, reward, terminated, truncated, info = LVol.step(action[0])
-        else:
-            obs, reward, terminated, truncated, info = LVol.step(action)
+        action = 1#env.action_space.sample()
+        obs, reward, terminated, truncated, info = LVol.step(action)
+        act[-1].append(action)
+        reward_episode += reward
         i += 1
-        if any([terminated,truncated]):
+        if any([terminated, truncated]):
             cont = False
-            Pi.append(LVol.Pi)
-            rew.append(reward)
-
-# Visualization
-M = int(T/dT)-1
-n = min(100,Nepisodes)
-Pi = np.array(random.sample(Pi,n)).T
-
-time = np.linspace(0,T,M)/dT
-tt = np.full(shape=(n,M), fill_value=time).T
-fig = plt.figure()
-plt.plot(tt,Pi)
-if not os.path.exists(f"{path_folder}/plots/"):
-        os.makedirs(f"{path_folder}/plots/")
-plt.savefig(f"{path_folder}/plots//BS_PPO_{str(steps)}_{str(int(sigma[0]*100))}{str(int(sigma[1]*100))}")
-plt.show()
+            tradingtimes[-1].append(env.unwrapped.tradingtimes)
+            rew.append(reward_episode)
 
 print(np.mean(rew),np.std(rew))
