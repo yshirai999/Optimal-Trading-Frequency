@@ -3,7 +3,6 @@
 ### PYTHONPATH is the path to python.exe
 ### in the OTF conda environment
 ### PATH is this python file's path
-### Example: C:/Users/yoshi/anaconda3/envs/OTF/python.exe "c:/Users/yoshi/OneDrive/Desktop/Research/Optimal Trading Frequency/Optimal-Trading-Frequency/master.py"
 ##########################################
 ### Libraries
 ##########################################
@@ -36,7 +35,7 @@ mu = [0.05]
 sigma = [0.3]
 P = [[1]]
 
-LVol = LocalVol(Dynamics = Dynamics, T = T, dT = dT)
+LVol = LocalVol(Dynamics = Dynamics, T = T, dT = dT, mu = mu, sigma = sigma, P = P)
 LVol.seed(seed=random.seed(10))
 
 env = gym.wrappers.TimeLimit(LVol, max_episode_steps=T)
@@ -44,7 +43,8 @@ env = Monitor(env, allow_early_resets=True)
 
 steps = 100000
 
-path_folder = f"C:/Users/yoshi/OneDrive/Desktop/Research/Optimal Trading Frequency/Optimal-Trading-Frequency/BS_PPO" # PATH to the BS_PPO_Models folder
+base_path = os.path.dirname(os.getcwd()) 
+path_folder = os.path.join(base_path,'BS_PPO') # PATH to the BS_PPO_Models folder
 path = f"{path_folder}/BS_PPO_{str(steps)}_n_regimes_{str(len(mu))}"
 for k in range(len(mu)):
     path += f"_mu[{str(k)}]={str(int(mu[k]*100))}"
@@ -63,7 +63,6 @@ except:
                 tensorboard_log=f"{path_folder}/tensorboard/")
     model.learn(total_timesteps=steps, callback=eval_callback, log_interval = 100)
     model.save(f"{path}.zip")
-    # To open tensorboard window, run tensorboard --logdir "C:/Users/yoshi/OneDrive/Desktop/Research/Optimal Trading Frequency/Optimal-Trading-Frequency/BS_PPO/tensorboard/PPO_1"
 
 ##########################################
 ### Experiment
