@@ -13,17 +13,7 @@ dependencies:
       - scikit-learn
       - scipy
       - statsmodels
-      - yfinance
-      - quandl
-      - pyfolio 
-      - arch
-      - statsmodels
-      - yfinance
-      - quandl
-      - pyfolio
-      - backtrader
-      - backtrader2
       - stable-baselines3
-      - gym
+      - gymnasium
       - tensorboard
       - tensorflow

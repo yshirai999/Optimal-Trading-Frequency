@@ -15,7 +15,7 @@ from stable_baselines3.common.vec_env import DummyVecEnv
 from stable_baselines3.common.env_checker import check_env
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.callbacks import EvalCallback
-from loggers import TensorboardCallback
+from Loggers import TensorboardCallback
 import numpy as np
 import random
 import os
