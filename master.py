@@ -20,6 +20,7 @@ import numpy as np
 import random
 import os
 import matplotlib.pyplot as plt
+import torch
 
 ##########################################
 ### Train/load model
@@ -34,6 +35,7 @@ r = 0
 mu = [0.05]
 sigma = [0.3]
 P = [[1]]
+cuda = True #Use cuda device and larger network architecture (3 layers, 256 neurons per layer) and larger batch size
 
 LVol = LocalVol(Dynamics = Dynamics, T = T, dT = dT, mu = mu, sigma = sigma, P = P)
 LVol.seed(seed=random.seed(10))
@@ -46,8 +48,12 @@ steps = 100000
 base_path = os.path.dirname(os.getcwd()) 
 path_folder = os.path.join(base_path,'BS_PPO') # PATH to the BS_PPO_Models folder
 path = f"{path_folder}/BS_PPO_{str(steps)}_n_regimes_{str(len(mu))}"
+
 for k in range(len(mu)):
     path += f"_mu[{str(k)}]={str(int(mu[k]*100))}"
+
+if cuda:
+    path += 'cuda'
 
 eval_callback = EvalCallback(env, best_model_save_path=path_folder,
                              log_path=path_folder, eval_freq=500,
@@ -59,8 +65,18 @@ except:
     print("Training model...")
     if not os.path.exists(f"{path_folder}/tensorboard/"):
         os.makedirs(f"{path_folder}/tensorboard/")
-    model = PPO('MlpPolicy', DummyVecEnv([lambda: env]), learning_rate=0.001, verbose=1,
-                tensorboard_log=f"{path_folder}/tensorboard/")
+    if cuda:
+        
+        print(torch.cuda.is_available())  # Should return True
+        print(torch.cuda.device_count())  # Number of GPUs available
+        print(torch.cuda.get_device_name(0))  # Name of the GPU
+
+        policy_kwargs = dict(net_arch=[256, 256, 256])
+        model = PPO('MlpPolicy', DummyVecEnv([lambda: env]), learning_rate=0.001, verbose=1, batch_size=1024, 
+                    policy_kwargs=policy_kwargs, device="cuda",tensorboard_log=f"{path_folder}/tensorboard/")
+    else:
+        model = PPO('MlpPolicy', DummyVecEnv([lambda: env]), learning_rate=0.001, verbose=1,
+                    tensorboard_log=f"{path_folder}/tensorboard/")
     model.learn(total_timesteps=steps, callback=eval_callback, log_interval = 100)
     model.save(f"{path}.zip")
 
