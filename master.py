@@ -33,9 +33,9 @@ T = 1
 dT = 1/252
 r = 0
 mu = [0.05,-0.02]
-sigma = [0.1,0.1]
+sigma = [0.3,0.3]
 P = [[0.9,0.0,0.0,0.1],[0.9,0.0,0.0,0.1],[0.5,0.0,0.0,0.5],[0.5,0.0,0.0,0.5]]
-cuda = False #Use cuda device and larger network architecture (3 layers, 256 neurons per layer) and larger batch size
+cuda = True #Use cuda device and larger network architecture (3 layers, 256 neurons per layer) and larger batch size
 
 LVol = LocalVol(Dynamics = Dynamics, T = T, dT = dT, mu = mu, sigma = sigma, P = P)
 LVol.seed(seed=random.seed(10))
@@ -50,7 +50,9 @@ path_folder = os.path.join(base_path,'Optimal-Trading-Frequency','BS_PPO') # PAT
 path = f"{path_folder}/BS_PPO_{str(steps)}_n_regimes_{str(len(mu))}"
 
 for k in range(len(mu)):
-    path += f"_mu[{str(k)}]={str(int(mu[k]*100))}+P[{str(k)}]={str(int(P[0][k]*100))}"
+    path += f"_mu[{str(k)}]={str(int(mu[k]*100))}_P[{str(k)}]={str(int(P[0][k]*100))}_sigma[{str(k)}]={str(int(sigma[k]*100))}" # Add mu and sigma to the path for each regime
+    # This will help to identify the model trained for each set of parameters
+    # Example: path = .../BS_PPO_1000000_n_regimes_2_mu[0]=5_P[0]=90_sigma[0]=10_mu[1]=-2_P[1]=0_sigma[1]=10
 
 if cuda:
     path += 'cuda'
