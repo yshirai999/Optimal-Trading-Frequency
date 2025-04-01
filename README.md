@@ -1,12 +1,15 @@
 # Optimal-Trading-Frequency
 
-- Consider an asset that follows a GBM, but its drift and volatility are subject to regime switches
+- A reinforcement learning environment is defined for an asset that follows a GBM, but its drift and volatility are subject to regime switches
 
-- The agent's action determines the trading' frequency.
+- The agent observes a signal (buy or sell) and chooses the frequency of trading
 
-- The observation is the sign of the drift, which is interpreted as a generic buy or sell signal
+- The higher the frequency, the lower the amount invested at each trading date
 
-- At each trading date, $fdt/T$ dollars of the asset are bought if drift is positive, and they are sold if the drift is negative
+- Specifically, at each trading date, $fdt/T$ dollars of the asset are bought if drift is positive, and they are sold if the drift is negative where:
+    - $f$ is investment horizon, decided by the traded
+    - $dt$ unit time
+    - $T$ final time
 
 - The resulting Markov Decision Process is implemented in a gym environment, and an optimal policy is learned using PPO.
 
