@@ -2,7 +2,7 @@
 
 - It is well known that reinforcement learning agents trading daily struggle to identify buying signals in the presence of microstructure noise and regime switches
 
-- Here it is assumed that a buy/sell signal is observed by the agent, who then decides the investment amount and the trading frequency
+- Here it is assumed that a buy/sell signal is observed by the agent, who then decides the investment amount and the investment horizon until the next trading day
 
 - Specifically, a reinforcement learning environment is defined for an asset that follows a GBM, but its drift and volatility are subject to regime switches
 
@@ -16,9 +16,3 @@
     - $T$ final time
 
 - The resulting Markov Decision Process is implemented in a gym environment, and an optimal policy is learned using PPO.
-
-## Bugs to fix
-
-- Check the time series of states: there should be no [0,1] and [1,0]
-
-- Check what it means to predict[[0,1]]
