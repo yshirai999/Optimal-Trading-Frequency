@@ -1,6 +1,10 @@
 # Optimal-Trading-Frequency
 
-- A reinforcement learning environment is defined for an asset that follows a GBM, but its drift and volatility are subject to regime switches
+- It is well known that reinforcement learning agents trading daily struggle to identify buying signals in the presence of microstructure noise and regime switches
+
+- Here it is assumed that a buy/sell signal is observed by the agent, who then decides the investment amount and the trading frequency
+
+- Specifically, a reinforcement learning environment is defined for an asset that follows a GBM, but its drift and volatility are subject to regime switches
 
 - The agent observes a signal (buy or sell) and chooses the frequency of trading
 
