@@ -33,7 +33,7 @@ T = 1
 dT = 1/252
 r = 0
 mu = [0.05,-0.02]
-sigma = [0.3,0.3]
+sigma = [0.01,0.01]
 P = [[0.9,0.0,0.0,0.1],[0.9,0.0,0.0,0.1],[0.5,0.0,0.0,0.5],[0.5,0.0,0.0,0.5]]
 cuda = True #Use cuda device and larger network architecture (3 layers, 256 neurons per layer) and larger batch size
 
